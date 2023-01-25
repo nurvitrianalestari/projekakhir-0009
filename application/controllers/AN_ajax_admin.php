@@ -10,19 +10,19 @@ class AN_ajax_admin extends CI_Controller
 		$this->load->database();
 		$this->load->library('session');
 		
-		if(!$this->input->is_ajax_request()){
-			exit('No direct script access allowed :)');
-		}  
+		//if(!$this->input->is_ajax_request()){
+		//	exit('No direct script access allowed :)');
+		//}  
 
 		if(!$this->session->userdata("login")){
 			exit("Akses Ditolak!");
 		}
 		
-		$this->load->helper(array('filter','url','file','tambahan'));
+		//$this->load->helper(array('filter','url','file','tambahan'));
 
 		$this->load->library(array('Slugify'));
 
-		$this->load->model("saya-disembunyikan/Tenant","ambil");
+		//$this->load->model("saya-disembunyikan/pasien","ambil");
 	}
 
 	function delete_kuisioner(){
@@ -100,10 +100,10 @@ class AN_ajax_admin extends CI_Controller
 	}
 
 	function dimensi(){
-			$id_dimensi=changequote($this->input->post("id_dimensi"));
-			$dimensi=changequote($this->input->post("dimensi"));
-			$keterangan=changequote($this->input->post("keterangan"));
-			if($id_dimensi==0){
+			$id_dimensi=$this->input->post("id_dimensi");
+			$dimensi=$this->input->post("dimensi");
+			$keterangan=$this->input->post("keterangan");
+			if($id_dimensi==''){
 				// "baru";
 				$query=$this->db->query("INSERT INTO dimensi (dimensi,keterangan) VALUES ('$dimensi','$keterangan')");
 				if ($query) {
@@ -120,11 +120,12 @@ class AN_ajax_admin extends CI_Controller
 
 				echo "ok";
 			}
+			
 	}
 
 	function cek_npm(){
 		$npm=trim(changequote($this->input->post('npm')));
-		$query=$this->db->query("SELECT * FROM tenant WHERE npm='$npm'");
+		$query=$this->db->query("SELECT * FROM pasien WHERE npm='$npm'");
 		if($query->num_rows()<1){
 			echo "ok";
 		} else{
@@ -132,7 +133,7 @@ class AN_ajax_admin extends CI_Controller
 		} 
 	}
 
-	function avatar_tenant(){
+	function avatar_pasien(){
 		$config=array(
 			"upload_path"=>FCPATH."an-component/media/upload-user-avatar/",
 			"allowed_types"=>"gif|jpg|jpeg|png"
@@ -149,15 +150,15 @@ class AN_ajax_admin extends CI_Controller
                 else
                 {
 
-                	$nama_tenant=$this->upload->data('file_name');
+                	$nama_pasien=$this->upload->data('file_name');
                 	$sesi_form=changequote($this->input->post('sesi'));
                 	$token_foto=changequote($this->input->post('token_foto'));
-                	$query=$this->db->query("INSERT into foto_user_tmp (nama_foto,token_foto,sesi_from) VALUES ('$nama_tenant','$token_foto','$sesi_form')");
+                	$query=$this->db->query("INSERT into foto_user_tmp (nama_foto,token_foto,sesi_from) VALUES ('$nama_pasien','$token_foto','$sesi_form')");
                 	echo 'ok';
                 }
 	}
 
-	function new_tenant(){
+	function new_pasien(){
 
 		$npm=trim(changequote($this->input->post("npm")));
 		$password=md5($this->input->post("password"));
@@ -167,16 +168,16 @@ class AN_ajax_admin extends CI_Controller
 		$unit=changequote($this->input->post("unit"));
 		$prodi=changequote($this->input->post("prodi"));		
 		$sessi=changequote($this->input->post("sessi"));
-		$avatar_tenant=changequote($this->input->post("avatar_tenant"));
+		$avatar_pasien=changequote($this->input->post("avatar_pasien"));
 		$tanggal_daftar=date("Y-m-d",now());
 
-		$user=$this->db->query("SELECT * FROM tenant WHERE npm='$npm'");
+		$user=$this->db->query("SELECT * FROM pasien WHERE npm='$npm'");
 		if($user->num_rows()>0){
 			echo "taken";
 		}else{
 			$photo="";
 			$savatar=$this->db->query("SELECT * FROM foto_user_tmp WHERE sesi_from='$sessi'");
-			if($avatar_tenant=="0"){
+			if($avatar_pasien=="0"){
 				//echo "No avatar";
 				if($savatar->num_rows()>0){
 					foreach($savatar->result_array() as $row){
@@ -193,14 +194,14 @@ class AN_ajax_admin extends CI_Controller
 					//echo "ada avatar";
 				}
 				if ($unit >"0") {
-								$query=$this->db->query("INSERT INTO tenant (npm,password,nama_lengkap,email,status,prodi,avatar_tenant,tanggal_daftar) 
+								$query=$this->db->query("INSERT INTO pasien (npm,password,nama_lengkap,email,status,prodi,avatar_pasien,tanggal_daftar) 
 									VALUES ('$npm','$password','$nama_lengkap','$email','$status','$unit','$photo','$tanggal_daftar')");
 									if($query){
 										echo "ok";
 									}
 
 				}else{
-								$query=$this->db->query("INSERT INTO tenant (npm,password,nama_lengkap,email,status,prodi,avatar_tenant,tanggal_daftar) 
+								$query=$this->db->query("INSERT INTO pasien (npm,password,nama_lengkap,email,status,prodi,avatar_pasien,tanggal_daftar) 
 									VALUES ('$npm','$password','$nama_lengkap','$email','$status','$prodi','$photo','$tanggal_daftar')");
 									if($query){
 										echo "ok";
@@ -209,8 +210,8 @@ class AN_ajax_admin extends CI_Controller
 		}
 	}
 
-	function edit_tenant(){
-		$id_tenant=trim(changequote($this->input->post("id_tenant")));
+	function edit_pasien(){
+		$id_pasien=trim(changequote($this->input->post("id_pasien")));
 		$npm=trim(changequote($this->input->post("npm")));
 		$password=md5($this->input->post("password"));
 		$nama_lengkap=changequote($this->input->post("nama_lengkap"));
@@ -219,29 +220,29 @@ class AN_ajax_admin extends CI_Controller
 		$unit=changequote($this->input->post("unit"));
 		$prodi=changequote($this->input->post("prodi"));		
 		
-		$user=$this->db->query("SELECT * FROM tenant WHERE level_tenant='1'");
+		$user=$this->db->query("SELECT * FROM pasien WHERE level_pasien='1'");
 		if($user->num_rows()>0){
 			echo "taken";
 		}else{	
 		if ($status==1) {
-			$query=$this->db->query("UPDATE tenant SET 
+			$query=$this->db->query("UPDATE pasien SET 
 									npm='$npm',
 									password='$password',
 									nama_lengkap='$nama_lengkap',
 									email='$email',
 									status='$status',
-									prodi='$unit' WHERE id_tenant='$id_tenant' ");
+									prodi='$unit' WHERE id_pasien='$id_pasien' ");
 									if($query){
 										echo "ok";
 									}
 		}else{
-			$query=$this->db->query("UPDATE tenant SET 
+			$query=$this->db->query("UPDATE pasien SET 
 									npm='$npm',
 									password='$password',
 									nama_lengkap='$nama_lengkap',
 									email='$email',
 									status='$status',
-									prodi='$prodi' WHERE id_tenant='$id_tenant' ");
+									prodi='$prodi' WHERE id_pasien='$id_pasien' ");
 									if($query){
 										echo "ok";
 									}	
@@ -249,7 +250,7 @@ class AN_ajax_admin extends CI_Controller
 		}
 	}
 
-	function update_avatar_tenant(){
+	function update_avatar_pasien(){
 		$config=array(
 			"upload_path"=>FCPATH."an-component/media/upload-user-avatar/",
 			"allowed_types"=>"gif|jpg|jpeg|png"
@@ -263,7 +264,7 @@ class AN_ajax_admin extends CI_Controller
                 }
                 else
                 {
-                	$id=changequote($this->input->post('id_tenant')); //????????????
+                	$id=changequote($this->input->post('id_pasien')); //????????????
                 	$nama=$this->upload->data('file_name');
                 	$token_foto=changequote($this->input->post('token_foto'));
                 	$query=$this->db->query("INSERT INTO foto_user_tmp (nama_foto,token_foto,id_user) VALUES ('$nama','$token_foto','$id')");
@@ -271,18 +272,18 @@ class AN_ajax_admin extends CI_Controller
                 }
 	}
 
-	function ganti_avatar_tenant(){
-		$id=changequote($this->input->post("id_tenant"));
+	function ganti_avatar_pasien(){
+		$id=changequote($this->input->post("id_pasien"));
 		$cari=$this->db->query("SELECT * FROM foto_user_tmp WHERE id_user='$id' ORDER BY id_foto DESC");
 		if($cari->num_rows()>0){
-			$cari_foto_lama=$this->db->query("SELECT * FROM tenant WHERE id_tenant='$id'");
+			$cari_foto_lama=$this->db->query("SELECT * FROM pasien WHERE id_pasien='$id'");
 			$_row=$cari_foto_lama->row();
-			$foto_lama=$_row->avatar_tenant;
+			$foto_lama=$_row->avatar_pasien;
 			if($foto_lama!="NoImage.jpg"){
 				unlink(FCPATH."an-component/media/upload-user-avatar/".$foto_lama);
 			}
 			$row=$cari->row();
-			$query=$this->db->query("UPDATE tenant SET avatar_tenant='".$row->nama_foto."' WHERE id_tenant='$id' ");
+			$query=$this->db->query("UPDATE pasien SET avatar_pasien='".$row->nama_foto."' WHERE id_pasien='$id' ");
 
 			//Hapus SEMUA yg punya ID user sama
 			$hapus=$this->db->query("DELETE FROM foto_user_tmp WHERE id_user='$id' ");
@@ -293,9 +294,9 @@ class AN_ajax_admin extends CI_Controller
 	}
 
 
-	function delete_tenant(){
+	function delete_pasien(){
 			$id=changequote($this->input->post("id"));
-			$query=$this->db->query("DELETE FROM tenant WHERE id_tenant='$id'");
+			$query=$this->db->query("DELETE FROM pasien WHERE id_pasien='$id'");
 			echo "ok";
 	}
 

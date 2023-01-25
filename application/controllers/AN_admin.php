@@ -27,7 +27,7 @@ class AN_admin extends CI_Controller {
 		//panggil helper	
 		$this->load->helper(array('filter','url','text'));
 
-		$this->load->model("saya-disembunyikan/Myuser","user");
+		$this->load->model("admin/Myuser","user");
 
 		$this->login= $this->user->set($this->session->userdata('id_user'),$this->session->userdata('name_user'),$this->session->userdata('password_user'));
 		
@@ -42,11 +42,11 @@ class AN_admin extends CI_Controller {
 	private function home(){ //Halaman Home
 		
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 		else {
 
-		$this->load->model("saya-disembunyikan/main");
+		$this->load->model("admin/main");
 
 		$data=array(
 				'avatar'=>$this->avatar_user,
@@ -56,12 +56,12 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>1,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'data'=>$this->main->get()
 				);
-		$this->load->view('saya-disembunyikan/header',$data);
-		$this->load->view('saya-disembunyikan/main',$data);
-		$this->load->view('saya-disembunyikan/footer',$data);
+		$this->load->view('admin/header',$data);
+		$this->load->view('admin/main',$data);
+		$this->load->view('admin/footer',$data);
 		}
 		
 	}
@@ -73,10 +73,10 @@ class AN_admin extends CI_Controller {
 	
 	function login($x=''){
 		if($this->login){
-			redirect('saya-disembunyikan');
+			redirect('admin');
 		}
 		$data['status']=$x;
-		$this->load->view("saya-disembunyikan/login",$data);
+		$this->load->view("admin/login",$data);
 	}
 
 	function proseslogin(){
@@ -87,7 +87,7 @@ class AN_admin extends CI_Controller {
 	 		$cari=$this->db->get_where("user",array("name_user"=>$user,"password_user"=>$pass,"level_user"=>"1","status_user"=>"Y"));
 
 	 		if($cari->num_rows()<1){
-	 			redirect("saya-disembunyikan/login/1");
+	 			redirect("admin/login/1");
 	 		}
 	 		else{
 	 			$row=$cari->row();
@@ -97,7 +97,7 @@ class AN_admin extends CI_Controller {
 	 						'password_user'=>$row->password_user,
 	 						'level_user'=>$row->level_user);
 	 			$this->session->set_userdata($data_sessi);
-	 			redirect("saya-disembunyikan");
+	 			redirect("admin");
 	 		}
 
 	 	}
@@ -109,15 +109,15 @@ class AN_admin extends CI_Controller {
 	function logout(){
 		$data= array("login","id_user","name_user","password_user","level_user","random_filemanager_key");
 		$this->session->unset_userdata($data);
-		redirect("saya-disembunyikan");
+		redirect("admin");
 	}
 	
 	function all_kuisioner(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/all_kuisioner","all_halaman");
+			$this->load->model("admin/all_kuisioner","all_halaman");
 			$this->all_halaman->semua_kuisioner();
 			$data=array(
 				'avatar'=>$this->avatar_user,
@@ -127,14 +127,14 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>2,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'hasil'=>$this->all_halaman->hasil,
 				);			
 
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/all_kuisioner',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);				
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/all_kuisioner',$data);
+			$this->load->view('admin/footer',$data);				
 
 			} else {
 				show_404();
@@ -144,11 +144,11 @@ class AN_admin extends CI_Controller {
 
 	function kuisioner($id=0){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 
 		else { 
-			$this->load->model("saya-disembunyikan/kuisioner","modul");
+			$this->load->model("admin/kuisioner","modul");
 			$this->modul->get_kriteria();
 
 			if($id!==0){
@@ -164,7 +164,7 @@ class AN_admin extends CI_Controller {
 					'nama'=>$this->nama_lengkap,
 					'user_level'=>$this->level_user,
 					'npage'=>3,
-					'burl'=>base_url()."saya-disembunyikan",
+					'burl'=>base_url()."admin",
 					'id_user'=>$this->id_user,
 					'data'=>$hasil,
 					'modul'=>"edit"
@@ -182,7 +182,7 @@ class AN_admin extends CI_Controller {
 					'user_level'=>$this->level_user,
 					'nama'=>$this->nama_lengkap,
 					'npage'=>3,
-					'burl'=>base_url()."saya-disembunyikan",
+					'burl'=>base_url()."admin",
 					'id_user'=>$this->id_user,
 					'modul'=>"new",
 					"id_kuisioner"=>0,
@@ -191,18 +191,18 @@ class AN_admin extends CI_Controller {
 					"deskripsi"=>''
 					);
 			}
-				$this->load->view('saya-disembunyikan/header',$data);
-				$this->load->view('saya-disembunyikan/kuisioner',$data);
-				$this->load->view('saya-disembunyikan/footer',$data);
+				$this->load->view('admin/header',$data);
+				$this->load->view('admin/kuisioner',$data);
+				$this->load->view('admin/footer',$data);
 		}
 	}
 
 	function all_kriteria(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/all_kriteria","all_halaman");
+			$this->load->model("admin/all_kriteria","all_halaman");
 			$this->all_halaman->semua_kriteria();
 			$data=array(
 				'avatar'=>$this->avatar_user,
@@ -212,14 +212,14 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>4,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'hasil'=>$this->all_halaman->hasil,
 				);			
 
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/all_kriteria',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);				
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/all_kriteria',$data);
+			$this->load->view('admin/footer',$data);				
 
 			} else {
 				show_404();
@@ -230,11 +230,11 @@ class AN_admin extends CI_Controller {
 	function kriteria($id=0){
 		$id=abs($id);
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 		else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/kriteria","halaman");
+			$this->load->model("admin/kriteria","halaman");
 			$this->halaman->get_dimensi();
 			if(!$this->halaman->get_kriteria($id)){
 				show_404();
@@ -248,14 +248,14 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>5,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'list_dimensi'=>$this->halaman->get_list_dimensi($id),
 				'data'=>$this->halaman->hasil
 				);
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/kriteria',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/kriteria',$data);
+			$this->load->view('admin/footer',$data);
 
 				}else{
 			$data=array(
@@ -266,14 +266,14 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>5,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'list_dimensi'=>$this->halaman->list_dimensi,
 				'data'=>$this->halaman->hasil
 				);
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/kriteria',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/kriteria',$data);
+			$this->load->view('admin/footer',$data);
 
 			}
 			}
@@ -286,10 +286,10 @@ class AN_admin extends CI_Controller {
 
 	function all_dimensi(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/all_dimensi","all_halaman");
+			$this->load->model("admin/all_dimensi","all_halaman");
 			$this->all_halaman->semua_dimensi();
 			$data=array(
 				'avatar'=>$this->avatar_user,
@@ -299,14 +299,14 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>6,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'hasil'=>$this->all_halaman->hasil,
 				);			
 
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/all_dimensi',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);				
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/all_dimensi',$data);
+			$this->load->view('admin/footer',$data);				
 
 			} else {
 				show_404();
@@ -317,11 +317,11 @@ class AN_admin extends CI_Controller {
 	function dimensi($id=0){
 		$id=abs($id);
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 		else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/dimensi","halaman");
+			$this->load->model("admin/dimensi","halaman");
 
 			if(!$this->halaman->get_dimensi($id)){
 				show_404();
@@ -335,13 +335,13 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>7,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'data'=>$this->halaman->hasil
 				);
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/dimensi',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/dimensi',$data);
+			$this->load->view('admin/footer',$data);
 
 
 			}
@@ -352,29 +352,29 @@ class AN_admin extends CI_Controller {
 		}		
 	}
 
-	function all_tenant(){
+	function all_pasien(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/all_tenant","all_halaman");
-			$this->all_halaman->semua_tenant();
+			$this->load->model("admin/all_pasien","all_halaman");
+			$this->all_halaman->semua_pasien();
 			$data=array(
 				'avatar'=>$this->avatar_user,
 				'path_avatar'=>base_url()."an-component/media/upload-user-avatar/".$this->avatar_user,
-				'title'=>"Semua Data Tenant / Pengunjung",
+				'title'=>"Semua Data Pasien",
 				'user'=>$this->name_user,
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>8,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'hasil'=>$this->all_halaman->hasil,
 				);			
 
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/all_tenant',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);				
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/all_pasien',$data);
+			$this->load->view('admin/footer',$data);				
 
 			} else {
 				show_404();
@@ -383,37 +383,37 @@ class AN_admin extends CI_Controller {
 	}
 
 
-	function tenant($id=0){
+	function pasien($id=0){
 		$id=abs($id);
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 		else {
 
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/tenant","halaman");
+			$this->load->model("admin/pasien","halaman");
 			$this->halaman->get_status();
 
-			if(!$this->halaman->get_tenant($id)){
+			if(!$this->halaman->get_pasien($id)){
 				show_404();
 			} else {
 
 			$data=array(
 				'avatar'=>$this->avatar_user,
 				'path_avatar'=>base_url()."an-component/media/upload-user-avatar/".$this->avatar_user,
-				'title'=>($id==0)?"Tenant Baru" : "Tenant Baru",
+				'title'=>($id==0)?"Pasien Baru" : "Pasien Baru",
 				'user'=>$this->name_user,
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>9,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'list_status'=>$this->halaman->list_status,
 				'id_user'=>$this->id_user,
 				'data'=>$this->halaman->hasil
 				);
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/tenant',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/pasien',$data);
+			$this->load->view('admin/footer',$data);
 
 
 			}
@@ -424,37 +424,37 @@ class AN_admin extends CI_Controller {
 		}		
 	}
 
-	function edit_tenant($id=0){
+	function edit_pasien($id=0){
 		$id=abs($id);
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 		else {
 
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/edit_tenant","halaman");
-			if(!$this->halaman->get_tenant($id)){
+			$this->load->model("admin/edit_pasien","halaman");
+			if(!$this->halaman->get_pasien($id)){
 				show_404();
 			} else {
 
 			$data=array(
 				'avatar'=>$this->avatar_user,
 				'path_avatar'=>base_url()."an-component/media/upload-user-avatar/".$this->avatar_user,
-				'title'=>($id==0)?"Tambah Data Tenant": "Edit Data Tenant",
+				'title'=>($id==0)?"Tambah Data pasien": "Edit Data pasien",
 				'user'=>$this->name_user,
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>35,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'list_status'=>$this->halaman->get_list_status($id),
 				'list_unit'=>$this->halaman->get_list_unit($id),
-				'list_prodi'=>$this->halaman->get_list_prodi($id),
+				'list_ruang'=>$this->halaman->get_list_ruang($id),
 				'id_user'=>$this->id_user,
 				'data'=>$this->halaman->hasil
 				);
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/edit_tenant',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/edit_pasien',$data);
+			$this->load->view('admin/footer',$data);
 			}
 
 			} else {
@@ -466,10 +466,10 @@ class AN_admin extends CI_Controller {
 	function kotak_saran(){
 
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 
-			$this->load->model('saya-disembunyikan/kotak_saran','inbox');
+			$this->load->model('admin/kotak_saran','inbox');
 
 			$data=array(
 				'avatar'=>$this->avatar_user,
@@ -479,21 +479,21 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>10,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'kotaksaran'=>$this->inbox->get_data()
 				);	
 
-			$this->load->view("saya-disembunyikan/header",$data);
-			$this->load->view("saya-disembunyikan/kotak_saran",$data);
-			$this->load->view("saya-disembunyikan/footer",$data);						
+			$this->load->view("admin/header",$data);
+			$this->load->view("admin/kotak_saran",$data);
+			$this->load->view("admin/footer",$data);						
 		}		
 	}
 
 	function layout_widget(){
 
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 			
 		}		
@@ -502,11 +502,11 @@ class AN_admin extends CI_Controller {
 
 	function all_status(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 
 		else {
-			$this->load->model("saya-disembunyikan/all_status");
+			$this->load->model("admin/all_status");
 			$hasil=$this->all_status->get_status();
 			$hasil=$this->all_status->hasil;
 
@@ -518,82 +518,82 @@ class AN_admin extends CI_Controller {
 					'nama'=>$this->nama_lengkap,
 					'user_level'=>$this->level_user,
 					'npage'=>11,
-					'burl'=>base_url()."saya-disembunyikan",
+					'burl'=>base_url()."admin",
 					'id_user'=>$this->id_user,
 					'hasil'=>$hasil
 					);
-				$this->load->view('saya-disembunyikan/header',$data);
-				$this->load->view('saya-disembunyikan/all_status',$data);
-				$this->load->view('saya-disembunyikan/footer',$data);
+				$this->load->view('admin/header',$data);
+				$this->load->view('admin/all_status',$data);
+				$this->load->view('admin/footer',$data);
 		}
 	}
 
-	function all_fakultas(){
+	function all_jenis(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 
 		else {
-			$this->load->model("saya-disembunyikan/all_fakultas");
-			$hasil=$this->all_fakultas->get_fakultas();
-			$hasil=$this->all_fakultas->hasil;
+			$this->load->model("admin/all_jenis");
+			$hasil=$this->all_jenis->get_jenis();
+			$hasil=$this->all_jenis->hasil;
 
 			$data=array(
 					'avatar'=>$this->avatar_user,
 					'path_avatar'=>base_url()."an-component/media/upload-user-avatar/".$this->avatar_user,
-					"title"=>"Fakultas",
+					"title"=>"jenis",
 					"user"=>$this->name_user,
 					'nama'=>$this->nama_lengkap,
 					'user_level'=>$this->level_user,
 					'npage'=>12,
-					'burl'=>base_url()."saya-disembunyikan",
+					'burl'=>base_url()."admin",
 					'id_user'=>$this->id_user,
 					'hasil'=>$hasil
 					);
-				$this->load->view('saya-disembunyikan/header',$data);
-				$this->load->view('saya-disembunyikan/all_fakultas',$data);
-				$this->load->view('saya-disembunyikan/footer',$data);
+				$this->load->view('admin/header',$data);
+				$this->load->view('admin/all_jenis',$data);
+				$this->load->view('admin/footer',$data);
 		}
 	}
 
-	function all_prodi(){
+	function all_ruang(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 
 		else {
-			$this->load->model("saya-disembunyikan/all_prodi");
-			$hasil=$this->all_prodi->get_prodi();
-			$hasil=$this->all_prodi->get_fakultas();
-			$hasil=$this->all_prodi->hasil;
+			$this->load->model("admin/all_ruang");
+			$hasil=$this->all_ruang->get_ruang();
+			$hasil=$this->all_ruang->get_jenis();
+			$hasil=$this->all_ruang->hasil;
 
 			$data=array(
 					'avatar'=>$this->avatar_user,
 					'path_avatar'=>base_url()."an-component/media/upload-user-avatar/".$this->avatar_user,
-					"title"=>"prodi",
+					"title"=>"ruang",
 					"user"=>$this->name_user,
 					'nama'=>$this->nama_lengkap,
 					'user_level'=>$this->level_user,
 					'npage'=>13,
-					'burl'=>base_url()."saya-disembunyikan",
-					'list_fakultas'=>$this->all_prodi->list_fakultas,
+					'burl'=>base_url()."admin",
+					'list_jenis'=>$this->all_ruang->list_jenis,
 					'id_user'=>$this->id_user,
 					'hasil'=>$hasil
 					);
-				$this->load->view('saya-disembunyikan/header',$data);
-				$this->load->view('saya-disembunyikan/all_prodi',$data);
-				$this->load->view('saya-disembunyikan/footer',$data);
+				$this->load->view('admin/header',$data);
+				$this->load->view('admin/all_ruang',$data);
+				$this->load->view('admin/footer',$data);
 		}
 	}
 
 	function input_ekspektasi(){
 		$id_hasil_kuisioner=$this->input->post('id_hasil_kuisioner');
 		$kode_kuisioner= $this->input->post('kode_kuisioner');
-		$kode_tenant = $this->input->post('kode_tenant');
+		$kode_pasien = $this->input->post('kode_pasien');
 		$id_kriteria = $this->input->post('id_kriteria');
 		$id_kuisioner= $this->input->post('id_kuisioner');
 		$jawaban = $this->input->post('jawaban');
-		$id_tenant = $this->input->post('id_tenant');
+		$id_pasien = $this->input->post('id_pasien');
     	$result = array();
     	if (!empty($id_kriteria) && (!empty($jawaban))) {
     		foreach($id_kriteria AS $key => $val){
@@ -601,12 +601,12 @@ class AN_admin extends CI_Controller {
 	      	"id_kriteria"  => $_POST['id_kriteria'][$key],
 	      	"id_kuisioner"  => $_POST['id_kuisioner'][$key],
 	      	"jawaban"  => $_POST['jawaban'][$key],
-	      	"id_tenant"  => $_POST['id_tenant'][$key]);
+	      	"id_pasien"  => $_POST['id_pasien'][$key]);
 		    }       
 	    $test= $this->db->insert_batch('detail_jawaban', $result);
 	    if($test){
 	    	if ($id_hasil_kuisioner==0) {
-			$query=$this->db->query("INSERT INTO hasil_kuisioner (id_kuisioner,id_tenant) VALUES ('$kode_kuisioner','$kode_tenant')");
+			$query=$this->db->query("INSERT INTO hasil_kuisioner (id_kuisioner,id_pasien) VALUES ('$kode_kuisioner','$kode_pasien')");
 				echo "ok";
 			}else{
 				echo "Database Error...!!!";
@@ -624,10 +624,10 @@ class AN_admin extends CI_Controller {
 
 	function ekspektasi_lab(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/ekspektasi_lab","halaman");
+			$this->load->model("admin/ekspektasi_lab","halaman");
 			$this->halaman->get_kuisioner();
 			$data=array(
 				'avatar'=>$this->avatar_user,
@@ -637,14 +637,14 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>14,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'hasil'=>$this->halaman->hasil,
 				);			
 
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/ekspektasi_lab',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);				
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/ekspektasi_lab',$data);
+			$this->load->view('admin/footer',$data);				
 
 			} else {
 				show_404();
@@ -654,10 +654,10 @@ class AN_admin extends CI_Controller {
 
 	function hasil_kuisioner(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/hasil_kuisioner","all_halaman");
+			$this->load->model("admin/hasil_kuisioner","all_halaman");
 			$this->all_halaman->ambil_hasil();
 			$data=array(
 				'avatar'=>$this->avatar_user,
@@ -667,14 +667,14 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>15,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'hasil'=>$this->all_halaman->hasil,
 				);			
 
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/hasil_kuisioner',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);				
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/hasil_kuisioner',$data);
+			$this->load->view('admin/footer',$data);				
 
 			} else {
 				show_404();
@@ -684,10 +684,10 @@ class AN_admin extends CI_Controller {
 
 	function hasil_servqual(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/hasil_servqual","all_halaman");
+			$this->load->model("admin/hasil_servqual","all_halaman");
 			$this->all_halaman->jumlah();
 			$this->all_halaman->servqual_total();
 			$this->all_halaman->servqual_kriteria();
@@ -706,7 +706,7 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>16,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'hasil'=>$this->all_halaman->hasil,
 				'jumlah'=>$this->all_halaman->jumlah,
@@ -715,9 +715,9 @@ class AN_admin extends CI_Controller {
 
 			);			
 
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/hasil_servqual',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);			
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/hasil_servqual',$data);
+			$this->load->view('admin/footer',$data);			
 
 			} else {
 				show_404();
@@ -758,7 +758,7 @@ class AN_admin extends CI_Controller {
 
 	function user_baru(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 		
 		else{
@@ -771,12 +771,12 @@ class AN_admin extends CI_Controller {
 					'nama'=>$this->nama_lengkap,
 					'user_level'=>$this->level_user,
 					'npage'=>22,
-					'burl'=>base_url()."saya-disembunyikan",
+					'burl'=>base_url()."admin",
 					);
 
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/user',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/user',$data);
+			$this->load->view('admin/footer',$data);
 
 			} else {
 				show_404();
@@ -786,12 +786,12 @@ class AN_admin extends CI_Controller {
 
 	function all_user(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		}
 
 		else {
 			if($this->level_user==1){
-				$this->load->model("saya-disembunyikan/daftar_user");
+				$this->load->model("admin/daftar_user");
 				$this->daftar_user->show();
 				$data=array(
 					'avatar'=>$this->avatar_user,
@@ -801,12 +801,12 @@ class AN_admin extends CI_Controller {
 					'nama'=>$this->nama_lengkap,
 					'user_level'=>$this->level_user,
 					'npage'=>21,
-					'burl'=>base_url()."saya-disembunyikan",
+					'burl'=>base_url()."admin",
 					'table'=>$this->daftar_user->hasil
 					);
-				$this->load->view('saya-disembunyikan/header',$data);
-				$this->load->view('saya-disembunyikan/all_user',$data);
-				$this->load->view('saya-disembunyikan/footer',$data);
+				$this->load->view('admin/header',$data);
+				$this->load->view('admin/all_user',$data);
+				$this->load->view('admin/footer',$data);
 			} else {
 				show_404();
 			}
@@ -815,10 +815,10 @@ class AN_admin extends CI_Controller {
 
 	function log(){
 		if(!$this->login){
-			redirect("saya-disembunyikan/login");
+			redirect("admin/login");
 		} else {
 			if($this->level_user==1){
-			$this->load->model("saya-disembunyikan/log","all_halaman");
+			$this->load->model("admin/log","all_halaman");
 			$this->all_halaman->jumlah();
 			$this->all_halaman->servqual_total();
 			$data=array(
@@ -836,16 +836,16 @@ class AN_admin extends CI_Controller {
 				'nama'=>$this->nama_lengkap,
 				'user_level'=>$this->level_user,
 				'npage'=>16,
-				'burl'=>base_url()."saya-disembunyikan",
+				'burl'=>base_url()."admin",
 				'id_user'=>$this->id_user,
 				'hasil'=>$this->all_halaman->hasil,
 				'jumlah'=>$this->all_halaman->jumlah
 
 			);			
 
-			$this->load->view('saya-disembunyikan/header',$data);
-			$this->load->view('saya-disembunyikan/log',$data);
-			$this->load->view('saya-disembunyikan/footer',$data);			
+			$this->load->view('admin/header',$data);
+			$this->load->view('admin/log',$data);
+			$this->load->view('admin/footer',$data);			
 
 			} else {
 				show_404();

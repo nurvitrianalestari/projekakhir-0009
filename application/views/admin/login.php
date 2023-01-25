@@ -9,17 +9,16 @@ $path_adm=base_url()."an-theme/admin";
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>SPK Kepuasan Pasien Rawat Inap | Log in</title>
-
+    <title>SPK Kepuasan Pasien Rawat Inap | Masuk</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link rel="shortcut icon" href="<?php echo base_url('assets/images/logo-rs-qim.png'); ?>; ?>" />
+    <link rel="shortcut icon" href="<?php echo base_url().'assets/images/logo-rs-qim.png'; ?>" />
     <!-- Bootstrap 3.3.4 -->
     <link href="<?php echo $path_adm; ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
     <!-- Font Awesome Icons -->
     <link href="<?php echo $path_adm; ?>/plugins/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <!-- Theme style -->
-    <link href="<?php echo $path_adm; ?>/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $path_adm; ?>/dist/css/AdminLTE.css" rel="stylesheet" type="text/css" />
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -32,10 +31,10 @@ $path_adm=base_url()."an-theme/admin";
   <body class="login-page">
     <div class="login-box">
       <div class="login-logo">
-        <a href="<?php echo base_url() ?>tenant/login"><img src="<?php echo base_url('assets/images/logo-rs-qim.png');?>" style="border-radius: 10%;"> </a>
+        <a href="<?php echo base_url() ?>admin/login"><img src="<?php echo base_url('assets/images/logo-rs-qim.png');?>" style="border-radius: 10%;"></a>
       </div><!-- /.login-logo -->
       <div class="login-box-body">
-        <p class="login-box-msg">Silahkan Login</p>
+        <p class="login-box-msg">Masukan username dan password anda</p>
         <?php 
         if($status==1){
           ?>
@@ -45,9 +44,9 @@ $path_adm=base_url()."an-theme/admin";
           <?php 
         }
         ?>
-        <form action="<?php echo base_url() ?>tenant/proseslogin" method="POST">
+        <form action="<?php echo base_url() ?>admin/proseslogin" method="POST">
           <div class="form-group has-feedback">
-            <input type="text" class="form-control" required='required' name='npm' placeholder="Username"/>
+            <input type="text" class="form-control" required='required' name='username' placeholder="Username"/>
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
           </div>
           <div class="form-group has-feedback">
@@ -55,13 +54,9 @@ $path_adm=base_url()."an-theme/admin";
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
           <div class="row">
-              <div class="col-xs-4">
-                <button type="submit" class="btn btn-warning btn-block btn-flat">Masuk</button>
-              </div><!-- /.col -->
-              <div class="col-xs-8">
-                <span class='pull-right' ><a class="btn btn-info-flat text-orange" href="#">Daftar Menjadi Pasien</a></span>
-              </div>
-            </div>
+            <div class="col-xs-4">
+              <button type="submit" class="btn btn-info btn-block btn-flat">Masuk</button>
+            </div><!-- /.col -->
           </div>
 
         

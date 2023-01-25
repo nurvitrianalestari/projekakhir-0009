@@ -55,13 +55,13 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['.+(welcome)']='$1';
 
-$route['saya-disembunyikan']='AN_admin';
-$route['saya-disembunyikan/(.+)']='AN_admin/$1';
+$route['admin']='AN_admin';
+$route['admin/(.+)']='AN_admin/$1';
 
 $route['staff']='AN_staff';
 $route['staff/(.+)']='AN_staff/$1';
 
-$route['tenant']='AN_tenant';
-$route['tenant/(.+)']='AN_tenant/$1';
+$route['pasien']='AN_pasien';
+$route['pasien/(.+)']='AN_pasien/$1';
 
 
